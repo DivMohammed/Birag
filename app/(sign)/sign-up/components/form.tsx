@@ -2,7 +2,7 @@
 
 import { useState ,useEffect} from "react";
 import * as z  from "zod";
-// import Axios from "axios"
+import axios from "axios"
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import Link from "next/link";
@@ -24,6 +24,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { buttonVariants } from '@/components/ui/button'
 import Container from "@/components/ui/container";
+import { error } from "console";
 
 
 
@@ -55,8 +56,15 @@ export const FormRegister = () => {
 
 const onSubmit = (data: ProductFormValues) => {
     try {
-        setLoading(true)
-        toast.success("رائع")
+        axios.post('/api/register', data)
+        .then(() => {
+            toast.success("تم تسجيلك")
+        }).catch((error) => {
+            toast.error("هناك خطأ ما")
+            console.log(error)
+        }).finally(() => {
+            // setLoading(true)
+        })
     } catch (error) {
         toast.error("Something went wrong.")
     } finally {
