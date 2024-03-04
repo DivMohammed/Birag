@@ -12,16 +12,27 @@ export async function POST(
         name,
         email,
         password,
+        avatar,
+        backgroundAvatar,
+        images,
     } = body;
 
     const hashedPassword = await bcrypt.hash(password, 12);
-    // await bcrypt.hash(password, 20);
 
     const user = await prisma.user.create({
         data: {
             name,
             email,
             hashedPassword,
+            avatar,
+            backgroundAvatar,
+            images: {
+                createMany: {
+                    data: [
+                        ...images.map((image?: {url: string}) => image)
+                    ]
+                }
+            }
         }
     })
 

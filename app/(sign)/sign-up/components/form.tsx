@@ -30,11 +30,15 @@ import { error } from "console";
 
 
 
+const message = "هذا الحقل فارغ!"
 const formSchema = z.object({
-  name: z.string().min(1),
-  email: z.string().min(1),
-  password: z.coerce.string().min(1),
-  passwordConfirm: z.coerce.string().min(1),
+    name: z.string().min(1, message),
+    email: z.string().min(1, message),
+    password: z.coerce.string().min(8, "يجب أن تكون كلمة السر 8 خانات أو أكثر"),
+    passwordConfirm: z.coerce.string().min(8, "يجب أن تكون كلمة السر 8 خانات أو أكثر"),
+    avatar: z.string(),
+    backgroundAvatar: z.string(),
+    images: z.object({ url: z.string() }).array(),
 });
 
 
@@ -43,6 +47,8 @@ type ProductFormValues = z.infer<typeof formSchema>;
 
 export const FormRegister = () => {
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
+
 
   const form = useForm<ProductFormValues>({
     resolver: zodResolver(formSchema),
@@ -51,25 +57,37 @@ export const FormRegister = () => {
             email: '',
             password: '',
             passwordConfirm: '',
+            avatar: '',
+            backgroundAvatar: '',
+            images: [{url:""}],
         }
     });
 
 const onSubmit = (data: ProductFormValues) => {
-    try {
-        axios.post('/api/register', data)
-        .then(() => {
-            toast.success("تم تسجيلك")
-        }).catch((error) => {
-            toast.error("هناك خطأ ما")
-            console.log(error)
-        }).finally(() => {
-            // setLoading(true)
-        })
-    } catch (error) {
-        toast.error("Something went wrong.")
-    } finally {
-        setLoading(false)
-    }
+    const validateEmail = async () => {
+        const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
+        if (emailRegex.test(data.email) && data.password === data.passwordConfirm) {
+            try {
+                setLoading(true)
+                await axios.post('/api/register', data)
+                .then((res) => {
+                    toast.success("تم تسجيلك")
+                    localStorage.setItem("IsRegister", res.data.id);
+                    router.push(`/`)
+                }).catch((error) => {
+                    toast.error("هناك خطأ ما")
+                    console.log(error)
+                })
+            } catch (error) {
+                toast.error("Something went wrong.")
+            } finally {
+                setLoading(false)
+            }
+        } else if (data.password !== data.passwordConfirm) {
+            toast.error("لا يوجد تطابق بين كلمتي السر")
+        }
+    };
+    validateEmail()
 }
 
   return (
@@ -100,7 +118,7 @@ const onSubmit = (data: ProductFormValues) => {
                             <FormItem>
                                 <FormLabel>البريد الألكتروني</FormLabel>
                                 <FormControl>
-                                    <Input type="email" disabled={loading} placeholder="البريد الألكتروني" {...field} />
+                                    <Input type="text" disabled={loading} placeholder="البريد الألكتروني" {...field} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>

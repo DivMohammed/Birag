@@ -5,6 +5,9 @@ import { ModalProvider } from "@/providers/modal-provider";
 import { Navbar } from "@/components/navbar";
 import { ToasterProvider } from "@/providers/toast-provider";
 
+import prisma from "@/lib/prismadb";
+
+
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -13,17 +16,18 @@ export const metadata: Metadata = {
   description: "Birag is the best",
 };
 
-export default function RootLayout({
+export default function RootLayout ({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
   return (
     <html lang="en">
       <body className={inter.className}>
       <ModalProvider/>
       <ToasterProvider />
-        <Navbar />
+        <Navbar/>
         {children}
       </body>
     </html>

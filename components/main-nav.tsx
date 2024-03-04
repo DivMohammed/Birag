@@ -1,11 +1,26 @@
+"use client"
 import Link from "next/link";
 
 import { cn } from "@/lib/utils";
 import { ROUTES } from "@/config/routes";
 import { Button } from "./ui/button";
+import { useState, useEffect } from "react";
+import UserAvatar from "./user-avatar";
 
+export interface propsUser {
+    user: object[];
+}
 
-export const MainNav = () => {
+export const MainNav: React.FC<propsUser> = ({user}) => {
+    const [isMounted, setIsMounted] = useState(false);
+
+    useEffect(() => {
+        setIsMounted(true);
+    }, [])
+
+    if (!isMounted){
+        return null
+    }
     
     return (
         <nav
@@ -23,11 +38,15 @@ export const MainNav = () => {
                     {label}
                 </Link>
             ))}
+            {!localStorage.getItem("IsRegister") ?
+                <UserAvatar user = {user}/>
+            :
             <Button>
                 <Link href="/sign-up">
                 تسجيل دخول
                 </Link>
             </Button>
+            }
         </nav>
     )
 }

@@ -1,11 +1,19 @@
-"use client"
 
 import Link from "next/link"
 import MainNav from "@/components/main-nav"
 import Container from "./ui/container"
 import { Icons } from "@/config/icons"
+import React from "react"
+import prisma from "@/lib/prismadb";
 
-export const Navbar = () => {
+
+
+export const Navbar = async () => {
+
+    const user = await prisma.user.findMany({
+        where: {}
+    })
+
   return (
     <div className="border-b">
             <Container>
@@ -13,7 +21,7 @@ export const Navbar = () => {
                     <Link href="/" className="ml-4 flex lg:ml-0 gap-x-2">
                         {/* <Icons.Logo/> */}
                     </Link>
-                    <MainNav/>
+                    <MainNav user={user}/>
                 </div>
             </Container>
         </div>
