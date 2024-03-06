@@ -6,7 +6,7 @@ import axios from "axios"
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import Link from "next/link";
-import { useParams, useRouter } from "next/navigation";
+import { redirect, useParams, useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { cn } from "@/lib/utils";
@@ -73,7 +73,7 @@ const onSubmit = (data: ProductFormValues) => {
                 .then((res) => {
                     toast.success("تم تسجيلك")
                     localStorage.setItem("IsRegister", res.data.id);
-                    router.push(`/`)
+                    router.push(`/${res.data.id}`)
                 }).catch((error) => {
                     toast.error("هناك خطأ ما")
                     console.log(error)

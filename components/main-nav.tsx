@@ -7,8 +7,16 @@ import { Button } from "./ui/button";
 import { useState, useEffect } from "react";
 import UserAvatar from "./user-avatar";
 
+export type UserType = {
+    id: string;
+    name: string;
+    email: string;
+    avatar: string;
+    backgroundAvatar: string;
+};
+
 export interface propsUser {
-    user: object[];
+    user: UserType[];
 }
 
 export const MainNav: React.FC<propsUser> = ({user}) => {
@@ -38,7 +46,7 @@ export const MainNav: React.FC<propsUser> = ({user}) => {
                     {label}
                 </Link>
             ))}
-            {!localStorage.getItem("IsRegister") ?
+            {localStorage.getItem("IsRegister") ?
                 <UserAvatar user = {user}/>
             :
             <Button>

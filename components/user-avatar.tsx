@@ -1,30 +1,39 @@
 "use client"
-import axios from "axios";
-import { useState, useEffect } from "react";
 
+import { useState, useEffect } from "react";
+import Image from "next/image";
+
+import { propsUser } from "./main-nav";
 
 import DEA from '@/public/icondefult.jpg';
-import Image from "next/image";
-import { propsUser } from "./main-nav";
+import Link from "next/link";
+import { useRouter, useParams } from "next/navigation";
 
 
 
 
 const UserAvatar: React.FC<propsUser> = ({user}) => {
-    const  [avatar, setAvatar] = useState("")
+    const  [avatarUser, setAvatarUser] = useState("")
+    const router = useRouter()
+    const params = useParams()
 
     useEffect(() => {
-    user.filter((user: any) => user.id === window.localStorage.getItem("IsRegister")) && setAvatar(user.avatar)
-    },[user])
+    // user.map((h)=> setAvatarUser(h.avatar))
+    user.filter((userInfo) => userInfo.id === window.localStorage.getItem("IsRegister") && setAvatarUser(userInfo.avatar))
+    console.log(params.Id)
+    },[])
 
   return (
-    <>
-        <Image 
-            className="object-cover rounded-full size-10"
-            alt="image"
-            src={!avatar? DEA : avatar}
-        />
-    </>
+  <>
+    <Image
+        width={50}
+        height={50}
+        className="object-cover rounded-full size-10"
+        alt="image"
+        src={!avatarUser? DEA : avatarUser}
+        onClick={() => router.push("")}
+    />
+  </>
   )
 }
 
