@@ -1,10 +1,12 @@
 "use client"
 import Link from "next/link";
+import { useParams, useRouter } from "next/navigation";
 
 import { cn } from "@/lib/utils";
 import { ROUTES } from "@/config/routes";
 import { Button } from "./ui/button";
 import { useState, useEffect } from "react";
+
 import UserAvatar from "./user-avatar";
 
 export type UserType = {
@@ -21,7 +23,11 @@ export interface propsUser {
 
 export const MainNav: React.FC<propsUser> = ({user}) => {
     const [isMounted, setIsMounted] = useState(false);
+    const router = useRouter();
+    const params = useParams();
 
+
+    
     useEffect(() => {
         setIsMounted(true);
     }, [])
@@ -47,7 +53,11 @@ export const MainNav: React.FC<propsUser> = ({user}) => {
                 </Link>
             ))}
             {localStorage.getItem("IsRegister") ?
-                <UserAvatar user = {user}/>
+                <Link href={`/${params.Id}/profile`}>
+                <UserAvatar 
+                user= {user}
+                />
+                </Link>
             :
             <Button>
                 <Link href="/sign-up">

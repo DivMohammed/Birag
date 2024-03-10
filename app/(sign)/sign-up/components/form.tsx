@@ -11,6 +11,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { cn } from "@/lib/utils";
 import { Icons } from "@/config/icons";
+import { useCookies } from 'next-client-cookies';
+
 
 import {
   Form,
@@ -48,6 +50,8 @@ type ProductFormValues = z.infer<typeof formSchema>;
 export const FormRegister = () => {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const cookies = useCookies();
+
 
 
   const form = useForm<ProductFormValues>({
@@ -73,6 +77,7 @@ const onSubmit = (data: ProductFormValues) => {
                 .then((res) => {
                     toast.success("تم تسجيلك")
                     localStorage.setItem("IsRegister", res.data.id);
+                    cookies.set('IsRegister', res.data.id)
                     router.push(`/${res.data.id}`)
                 }).catch((error) => {
                     toast.error("هناك خطأ ما")

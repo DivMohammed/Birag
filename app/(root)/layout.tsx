@@ -1,17 +1,14 @@
+import { Navbar } from "@/components/navbar";
 import { redirect } from "next/navigation";
+
 import { getCookies } from 'next-client-cookies/server';
-
 import prisma from "@/lib/prismadb";
-import {Navbar} from "@/components/navbar";
 
 
-
-export default async function DashboardLayout({
-    children,
-    params,
+export default async function SetupLayout({
+    children
 }: {
     children: React.ReactNode;
-    params: { Id: string };
 }) {
 
     const cookies = getCookies().get('IsRegister');
@@ -29,20 +26,20 @@ export default async function DashboardLayout({
         }
     });
 
-    if (params.Id !== cookies){
-        redirect(`/${cookies}`)
+    if (user){
+        redirect(`/${user.id}`)
     }
 
 
 
-    // if (cookies){
-    //     console.log(cookies.get('IsRegister'))
-    // }
+    if (cookies){
+        console.log(cookies)
+    }
 
-return (
-    <>
-        <Navbar />
+    return (
+        <>
+        <Navbar/>
         {children}
-    </>
-)
+        </>
+    )
 }
