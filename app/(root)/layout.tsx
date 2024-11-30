@@ -19,16 +19,22 @@ export default async function SetupLayout({
     //     redirect('/sign-in')
     // }
 
-
+if(cookies){
     const user = await prisma.user.findFirst({
         where: {
             id: cookies,
         }
-    });
+    })
 
     if (user){
         redirect(`/${user.id}`)
     }
+}
+
+
+    // if (!cookies){
+    //     redirect(`/`)
+    // }
 
 
 

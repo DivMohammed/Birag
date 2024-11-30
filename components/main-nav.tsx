@@ -7,7 +7,10 @@ import { ROUTES } from "@/config/routes";
 import { Button } from "./ui/button";
 import { useState, useEffect } from "react";
 
-import UserAvatar from "./user-avatar";
+import { useCookies } from 'next-client-cookies';
+import { UserProfile } from "./avatar-img";
+import { Icons } from "@/config/icons";
+
 
 export type UserType = {
     id: string;
@@ -15,16 +18,22 @@ export type UserType = {
     email: string;
     avatar: string;
     backgroundAvatar: string;
+    images: any;
 };
 
 export interface propsUser {
-    user: UserType[];
+    // user: UserType[];
+    user: {
+        avatar: string | null;
+        backgroundAvatar: string | null;
+    } | null;
 }
 
 export const MainNav: React.FC<propsUser> = ({user}) => {
     const [isMounted, setIsMounted] = useState(false);
     const router = useRouter();
     const params = useParams();
+    const cookie = useCookies();
 
 
     
@@ -35,12 +44,14 @@ export const MainNav: React.FC<propsUser> = ({user}) => {
     if (!isMounted){
         return null
     }
-    
+
+
+
     return (
         <nav
             className="mx-6 flex items-center space-x-4 lg:space-x-6"
         >
-            {ROUTES.map(({label , path}) => (
+            {ROUTES.map(({Label , path}) => (
                 <Link
                     key={path}
                     href={path}
@@ -49,15 +60,24 @@ export const MainNav: React.FC<propsUser> = ({user}) => {
                         // active ? "text-black" : "text-neutral-500"
                     )}
                 >
-                    {label}
+                    {<Label/>}
                 </Link>
             ))}
-            {localStorage.getItem("IsRegister") ?
-                <Link href={`/${params.Id}/profile`}>
-                <UserAvatar 
-                user= {user}
+            {cookie.get('IsRegister')?
+                <>
+                <Link href={`/${cookie.get('IsRegister')}/profile`}>
+                <UserProfile 
+                    width="50"
+                    height="50"
+                    adjustable={false}
+                    value={user?.avatar}
+                    // className="w-20 h-20"
                 />
                 </Link>
+                <Button onClick={()=> {
+                cookie.remove("IsRegister") 
+                router.push("/")}}>تسجيل خروج</Button>
+                </>
             :
             <Button>
                 <Link href="/sign-up">

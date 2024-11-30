@@ -34,21 +34,15 @@ import { error } from "console";
 
 const message = "هذا الحقل فارغ!"
 const formSchema = z.object({
-    name: z.string().min(1, message),
     email: z.string().min(1, message),
     password: z.coerce.string().min(8, "يجب أن تكون كلمة السر 8 خانات أو أكثر"),
-    passwordConfirm: z.coerce.string().min(8, "يجب أن تكون كلمة السر 8 خانات أو أكثر"),
-    avatar: z.string(),
-    info: z.string(),
-    backgroundAvatar: z.string(),
-    // images: z.object({ url: z.string() }).array(),
 });
 
 
 type ProductFormValues = z.infer<typeof formSchema>;
 
 
-export const FormRegister = () => {
+export const FormSignIn = () => {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const cookies = useCookies();
@@ -58,24 +52,18 @@ export const FormRegister = () => {
   const form = useForm<ProductFormValues>({
     resolver: zodResolver(formSchema),
         defaultValues:{
-            name: '',
             email: '',
             password: '',
-            passwordConfirm: '',
-            avatar: '',
-            backgroundAvatar: '',
-            info: '',
-            // images: [{url:""}],
         }
     });
 
 const onSubmit = (data: ProductFormValues) => {
     const validateEmail = async () => {
         const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
-        if (emailRegex.test(data.email) && data.password === data.passwordConfirm) {
+        if (emailRegex.test(data.email)) {
             try {
                 setLoading(true)
-                await axios.post('/api/register', data)
+                await axios.post('/api/login', data)
                 .then((res) => {
                     toast.success("تم تسجيلك")
                     // localStorage.setItem("IsRegister", res.data.id);
@@ -84,14 +72,13 @@ const onSubmit = (data: ProductFormValues) => {
                 }).catch((error) => {
                     toast.error("هناك خطأ ما")
                     console.log(error)
+                    console.log(data)
                 })
             } catch (error) {
                 toast.error("Something went wrong.")
             } finally {
                 setLoading(false)
             }
-        } else if (data.password !== data.passwordConfirm) {
-            toast.error("لا يوجد تطابق بين كلمتي السر")
         }
     };
     validateEmail()
@@ -105,19 +92,6 @@ const onSubmit = (data: ProductFormValues) => {
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 w-full">
                 <div className="grid gap-4 items-end lg:grid-cols-4 md:grid-cols-2 sm:grid-cols-1">
-                    <FormField
-                        control={form.control}
-                        name="name"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>الأسم</FormLabel>
-                                <FormControl>
-                                    <Input type="text" disabled={loading} placeholder="الأسم" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
                     <FormField
                         control={form.control}
                         name="email"
@@ -144,21 +118,8 @@ const onSubmit = (data: ProductFormValues) => {
                             </FormItem>
                         )}
                     />
-                    <FormField
-                        control={form.control}
-                        name="passwordConfirm"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>أعد كلمة المرور</FormLabel>
-                                <FormControl>
-                                    <Input type="password" disabled={loading} placeholder="أعد كلمة المرور" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
                     <Button disabled={loading} className="" type="submit">
-                      تسجيل دخول جديد
+                      تسجيل دخول
                     </Button>
                 </div>
             </form>

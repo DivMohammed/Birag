@@ -29,10 +29,9 @@ export default async function DashboardLayout({
         }
     });
 
-    if (params.Id !== cookies){
-        redirect(`/${cookies}`)
-    }
-
+    // if (params.Id !== cookies){
+    //     redirect(`/${cookies}`)
+    // }
 
 
     // if (cookies){

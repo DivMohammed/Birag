@@ -1,6 +1,7 @@
 import prisma from "@/lib/prismadb";
 import { NextResponse } from "next/server";
 
+
 export async function GET(
     req: Request
 ){
@@ -12,6 +13,7 @@ export async function GET(
 
     return NextResponse.json(user);
     } catch (error) {
+
     console.log('[USER_GET]', error);
     return new NextResponse("Internal error", {status: 500});
     }

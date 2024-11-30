@@ -2,7 +2,8 @@
 const nextConfig = {
     images: {
     domains: [
-        "fiverr-res.cloudinary.com", "res.cloudinary.com"
+        "fiverr-res.cloudinary.com", "res.cloudinary.com",
+        "res.cloudinary.com"
     ]
 }
 };

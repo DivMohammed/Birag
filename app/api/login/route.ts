@@ -9,34 +9,34 @@ export async function POST(
     try{
     const body = await req.json();
     const {
-        name,
         email,
         password,
-        avatar,
-        backgroundAvatar,
-        info,
-        // images,
     } = body;
 
-    const hashedPassword = await bcrypt.hash(password, 12);
+    // const hashedPassword = await bcrypt.hash(password, 12);
 
-    const user = await prisma.user.create({
-        data: {
-            name,
+    const user = await prisma.user.findUnique({
+        where:{
             email,
-            hashedPassword,
-            info,
-            avatar,
-            backgroundAvatar,
-            // posts: {
-            //     createMany: {
-            //         data: [
-            //             ...images.map((image?: {url: string}) => image)
-            //         ]
-            //     }
-            // }
         }
     })
+
+
+    if (!user) {
+        return new NextResponse("user not defined" , {status: 400});
+    }
+
+        const isPasswordValid = await bcrypt.compare(password, user?.hashedPassword);
+
+        if(!isPasswordValid){
+            return new NextResponse("email or password not correct" , {status: 400});
+        }
+    
+        // if(isPasswordValid){
+        // var token = jwt.sign({id: admin._id}, "1234")
+        // // Generates a token code specifically for the user
+        // return res.json({token, adminID: admin._id})
+        // }
 
     return NextResponse.json(user);
     } catch (error) {
